@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  api-test:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@postgres-test:5432/banksaathi_test
+      - REDIS_URL=redis://redis-test:6379/0
+      - YONO_MOCK_BASE_URL=http://yono-mock-test:8002
+    depends_on:
+      - postgres-test
+      - redis-test
+    networks:
+      - banksaathi-test-net
+
+  postgres-test:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=banksaathi_test
+    tmpfs:
+      - /var/lib/postgresql/data
+    networks:
+      - banksaathi-test-net
+
+  redis-test:
+    image: redis:7-alpine
+    networks:
+      - banksaathi-test-net
+
+  yono-mock-test:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    command: uvicorn scripts.yono_mock_server:app --host 0.0.0.0 --port 8002
+    networks:
+      - banksaathi-test-net
+
+networks:
+  banksaathi-test-net:
+    driver: bridge

@@ -1,0 +1,16 @@
+[
+  {
+    "phone_number": "+919400000000",
+    "name": "Raju Reddy",
+    "sbi_account_number": "1234567823",
+    "kyc_occupation": "farmer",
+    "dms_level": 1
+  },
+  {
+    "phone_number": "+919500000000",
+    "name": "Priya Sen",
+    "sbi_account_number": "9876543210",
+    "kyc_occupation": "analyst",
+    "dms_level": 2
+  }
+]

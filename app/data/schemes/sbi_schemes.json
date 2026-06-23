@@ -1,0 +1,89 @@
+[
+  {
+    "scheme_id": "KCC_001",
+    "name": "Kisan Credit Card",
+    "category": "agri_credit",
+    "max_amount": 500000,
+    "interest_rate_percent": 7.0,
+    "eligibility_rules": {
+      "occupation_flags": ["farmer", "agriculture"],
+      "min_account_age_years": 1,
+      "max_existing_agri_loans": 0,
+      "requires_land_records": true,
+      "eligible_states": "all"
+    },
+    "documents_required": ["aadhaar", "land_record", "passport_photo"],
+    "yono_flow": "Loans > Kisan Credit Card > Apply",
+    "pillar": "Digital Adoption",
+    "disclaimer": "Eligibility is indicative. Final sanction at SBI branch officer discretion."
+  },
+  {
+    "scheme_id": "PM_FASAL_002",
+    "name": "PM Fasal Bima Yojana",
+    "category": "crop_insurance",
+    "max_amount": 100000,
+    "interest_rate_percent": 2.0,
+    "eligibility_rules": {
+      "occupation_flags": ["farmer"],
+      "min_account_age_years": 0.5,
+      "max_existing_agri_loans": 5,
+      "requires_land_records": true,
+      "eligible_states": "all"
+    },
+    "documents_required": ["aadhaar", "land_record"],
+    "yono_flow": "Insurance > PM Fasal Bima",
+    "pillar": "Customer Protection",
+    "disclaimer": "Crop insurance rules follow seasonal PMFBY guidelines."
+  },
+  {
+    "scheme_id": "WECARE_FD_003",
+    "name": "SBI Wecare FD",
+    "category": "investment",
+    "max_amount": 20000000,
+    "interest_rate_percent": 7.5,
+    "eligibility_rules": {
+      "occupation_flags": ["any"],
+      "min_age": 60,
+      "requires_land_records": false,
+      "eligible_states": "all"
+    },
+    "documents_required": ["aadhaar", "pan"],
+    "yono_flow": "Deposits > Fixed Deposit > Special FD",
+    "pillar": "Wealth Management",
+    "disclaimer": "Interest rate is subject to change according to SBI policy decisions."
+  },
+  {
+    "scheme_id": "STREE_SHAKTI_004",
+    "name": "Stree Shakti Package",
+    "category": "business_loan",
+    "max_amount": 500000,
+    "interest_rate_percent": 6.8,
+    "eligibility_rules": {
+      "occupation_flags": ["entrepreneur", "business"],
+      "gender": "female",
+      "min_account_age_years": 1,
+      "requires_land_records": false,
+      "eligible_states": "all"
+    },
+    "documents_required": ["aadhaar", "pan", "business_license"],
+    "yono_flow": "Loans > Business Loans > Stree Shakti",
+    "pillar": "Women Empowerment",
+    "disclaimer": "Concessional rates depend on woman entrepreneur holding > 51% stake."
+  },
+  {
+    "scheme_id": "MUDRA_SHISHU_005",
+    "name": "Mudra Loan (Shishu)",
+    "category": "business_loan",
+    "max_amount": 50000,
+    "interest_rate_percent": 9.0,
+    "eligibility_rules": {
+      "occupation_flags": ["retailer", "artisan", "entrepreneur"],
+      "requires_land_records": false,
+      "eligible_states": "all"
+    },
+    "documents_required": ["aadhaar", "pan", "rent_agreement"],
+    "yono_flow": "Loans > Mudra > Shishu",
+    "pillar": "Micro-Credit",
+    "disclaimer": "Collateral-free loan. Final verification by MSME branch analyst."
+  }
+]

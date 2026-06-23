@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "banksaathi"
+version = "0.1.0"
+description = "Agentic AI Banking Companion for SBI"
+authors = ["BankSaathi Team"]
+python = "^3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+
+[tool.mypy]
+python_version = "3.11"
+strict = true

@@ -1,0 +1,8 @@
+{
+  "KCC_001": {
+    "occupation_flags": ["farmer", "agriculture"],
+    "min_account_age_years": 1,
+    "max_existing_agri_loans": 0,
+    "requires_land_records": true
+  }
+}
