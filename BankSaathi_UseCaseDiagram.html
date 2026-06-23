@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BankSaathi — Use Case Diagram</title>
+<style>
+  :root{
+    --blue:#22409A; --ink:#1A1A2E; --grey:#6B7280; --ice:#F0F4FF; --border:#E5E7EB;
+    --samjho:#2563EB; --khojo:#059669; --chalao:#EA580C; --queue:#7C3AED;
+    --suraksha:#DC2626; --core:#6B7280; --dms:#0891B2;
+    --cust:#22409A; --officer:#B45309; --cbs:#0F766E; --comp:#475569;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Poppins','Segoe UI',Inter,system-ui,Arial,sans-serif;color:var(--ink);background:#fff;}
+  header{padding:22px 28px 12px;border-bottom:1px solid var(--border);}
+  .brand{font-weight:700;color:var(--blue);font-size:20px;letter-spacing:-.3px}
+  h1{font-size:24px;margin:8px 0 4px;color:var(--blue);font-weight:700}
+  .sub{color:var(--grey);font-size:14px;margin:0}
+  .hint{display:inline-block;margin-top:10px;font-size:12.5px;color:var(--blue);background:var(--ice);
+        border:1px solid #D6E0FB;border-radius:20px;padding:5px 14px}
+  .wrap{padding:14px 20px 8px;overflow-x:auto}
+  svg{display:block;margin:0 auto;width:100%;max-width:1240px;height:auto;min-width:920px}
+  /* interactivity */
+  .node,.edge,.elabel{transition:opacity .18s ease}
+  body.focusing .node:not(.hot){opacity:.12}
+  body.focusing .edge:not(.hot){opacity:.06}
+  body.focusing .elabel:not(.hot){opacity:0}
+  .uc{cursor:pointer}
+  .actor{cursor:pointer}
+  .legend{display:flex;flex-wrap:wrap;gap:10px 22px;padding:6px 28px 24px;max-width:1240px;margin:0 auto}
+  .lg{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink)}
+  .sw{width:15px;height:15px;border-radius:4px;border:2px solid}
+  .legtitle{font-weight:600;font-size:13px;color:var(--grey);width:100%;margin-top:6px;text-transform:uppercase;letter-spacing:.4px}
+  .relkey{display:flex;gap:26px;flex-wrap:wrap;padding:0 28px 28px;max-width:1240px;margin:0 auto;font-size:13px;color:var(--ink)}
+  .relkey b{color:var(--blue)}
+  footer{padding:18px 28px 40px;border-top:1px solid var(--border);color:var(--grey);font-size:12.5px;max-width:1240px;margin:0 auto}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">BankSaathi</div>
+  <h1>Use Case Diagram — Agentic AI Banking Companion</h1>
+  <p class="sub">Actors, the BankSaathi system boundary, and the use cases owned by each of the 5 agents. SBI Hackathon @ GFF 2026.</p>
+  <span class="hint">Hover (or tap) any actor or use case to trace its connections.</span>
+</header>
+
+<div class="wrap">
+  <svg id="diagram" viewBox="0 0 1440 900" role="img" aria-label="BankSaathi use case diagram"></svg>
+</div>
+
+<div class="legend" id="legend">
+  <div class="legtitle">Use cases coloured by owning agent / module</div>
+</div>
+
+<div class="relkey">
+  <span><b>——</b> association (actor uses the case)</span>
+  <span><b>– – ▷</b> «include» (always-run sub-step)</span>
+  <span><b>– – ▷</b> «extend» (conditional behaviour)</span>
+</div>
+
+<footer>
+  The five agents — <b>Samjho</b> (understand &amp; qualify), <b>Khojo</b> (scheme discovery), <b>Chalao</b> (YONO navigation),
+  <b>Queue&nbsp;Hatao</b> (proactive engagement), and <b>Suraksha</b> (fraud &amp; protection) — operate inside one orchestrated system.
+  Tier-3 actions such as loan sanctioning stay with the Branch Officer; the agent only pre-briefs and escalates. Account data access is gated by consent and authentication.
+</footer>
+
+<script>
+const S = document.getElementById('diagram');
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag, attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+
+// ---- palette ----
+const AGENT = {
+  Samjho:'#2563EB', Khojo:'#059669', Chalao:'#EA580C', 'Queue Hatao':'#7C3AED',
+  Suraksha:'#DC2626', DMS:'#0891B2', Core:'#6B7280', Officer:'#B45309'
+};
+const ACTORCOL = {customer:'#22409A', officer:'#B45309', cbs:'#0F766E', compliance:'#475569'};
+
+// ---- grid ----
+const COLX=[455,720,985], ROWY=[210,335,460,585,710], RX=110, RY=40;
+function pos(c,r){return {x:COLX[c], y:ROWY[r]};}
+
+// ---- use cases ----
+const UC = {
+  disclose :{t:'Disclose AI identity',      ag:'Core',        c:0,r:0},
+  understand:{t:'Understand intent',        ag:'Samjho',      c:0,r:1},
+  identify :{t:'Identify customer (CBS)',   ag:'Core',        c:0,r:2},
+  consent  :{t:'Capture consent (DPDP)',    ag:'Core',        c:0,r:3},
+  grievance:{t:'Report a grievance',        ag:'Core',        c:0,r:4},
+  discover :{t:'Discover eligible schemes', ag:'Khojo',       c:1,r:0},
+  why      :{t:'Explain “Why this?”',       ag:'Khojo',       c:1,r:1},
+  dms      :{t:'Track Maturity Score',      ag:'DMS',         c:1,r:2},
+  navigate :{t:'Guide YONO navigation',     ag:'Chalao',      c:1,r:3},
+  recover  :{t:'Recover navigation',        ag:'Chalao',      c:1,r:4},
+  nudge    :{t:'Send proactive nudge',      ag:'Queue Hatao', c:2,r:0},
+  book     :{t:'Book branch appointment',   ag:'Queue Hatao', c:2,r:1},
+  brief    :{t:'Brief & escalate to officer',ag:'Core',       c:2,r:2},
+  sanction :{t:'Sanction & verify (Tier 3)',ag:'Officer',     c:2,r:3},
+  fraud    :{t:'Detect fraud & anomaly',    ag:'Suraksha',    c:2,r:4},
+};
+Object.keys(UC).forEach(k=>{const p=pos(UC[k].c,UC[k].r);UC[k].x=p.x;UC[k].y=p.y;});
+
+// ---- actors ----
+const ACT = {
+  customer  :{t:'Customer',          sub:'Raju · Priya',  x:150, y:455, side:'L'},
+  cbs       :{t:'SBI CBS',           sub:'core banking',  x:1295,y:235, side:'R'},
+  officer   :{t:'Branch Officer',    sub:'human-in-loop', x:1295,y:500, side:'R'},
+  compliance:{t:'Compliance & Audit',sub:'DPDP · RBI',    x:1295,y:745, side:'R'},
+};
+
+// ---- relations ----
+const ASSOC = {
+  customer:['disclose','understand','consent','grievance','discover','navigate','nudge','book'],
+  cbs:['identify','discover','dms','book'],
+  officer:['brief','sanction','book'],
+  compliance:['disclose','consent','fraud'],
+};
+const INCLUDE = [['understand','identify'],['discover','consent'],['discover','why'],['navigate','dms'],['book','brief']];
+const EXTEND  = [['recover','navigate']];
+
+// ---- helpers ----
+function ellipsePt(cx,cy,rx,ry,tx,ty){const a=Math.atan2(ty-cy,tx-cx);return [cx+rx*Math.cos(a), cy+ry*Math.sin(a)];}
+function actorAnchor(a){return a.side==='L'?[a.x+34,a.y]:[a.x-34,a.y];}
+function wrap2(t){ // split into <=2 lines
+  if(t.length<=18) return [t];
+  const w=t.split(' ');let l1='',l2='';
+  for(const word of w){ if((l1+' '+word).trim().length<=18 && l2==='') l1=(l1+' '+word).trim(); else l2=(l2+' '+word).trim(); }
+  return [l1,l2];
+}
+const edges=[]; // {ends:[k1,k2], dom, label}
+
+// ---- defs (arrow marker) ----
+const defs=el('defs',{});
+const mk=el('marker',{id:'arrow',markerWidth:'12',markerHeight:'12',refX:'9',refY:'5',orient:'auto',markerUnits:'userSpaceOnUse'});
+mk.appendChild(el('path',{d:'M0,0 L10,5 L0,10',fill:'none',stroke:'#6B7280','stroke-width':'1.6'}));
+defs.appendChild(mk);
+S.appendChild(defs);
+
+// ---- system boundary ----
+const bx=300,by=95,bw=840,bh=685;
+S.appendChild(el('rect',{x:bx,y:by,width:bw,height:bh,rx:26,fill:'#FBFCFF',stroke:'#22409A','stroke-width':'2'}));
+const btitle=el('text',{x:bx+bw/2,y:by+34,'text-anchor':'middle','font-size':'17','font-weight':'700',fill:'#22409A'});
+btitle.textContent='BankSaathi  —  Agentic AI System';
+S.appendChild(btitle);
+// column captions
+const caps=[['Entry · Compliance · Intent',455],['Discovery · Adoption',720],['Engagement · Protection · Handoff',985]];
+caps.forEach(c=>{const t=el('text',{x:c[1],y:by+60,'text-anchor':'middle','font-size':'12','font-weight':'600',fill:'#9AA3B2','letter-spacing':'.3'});t.textContent=c[0];S.appendChild(t);});
+
+// ---- layer groups (edges under nodes) ----
+const gEdges=el('g',{}); S.appendChild(gEdges);
+const gLabels=el('g',{}); S.appendChild(gLabels);
+const gNodes=el('g',{}); S.appendChild(gNodes);
+
+// ---- draw association edges ----
+for(const ak in ASSOC){
+  const a=ACT[ak], anc=actorAnchor(a);
+  ASSOC[ak].forEach(uk=>{
+    const u=UC[uk];
+    const [ex,ey]=ellipsePt(u.x,u.y,RX,RY,anc[0],anc[1]);
+    const line=el('line',{x1:anc[0],y1:anc[1],x2:ex,y2:ey,stroke:ACTORCOL[ak],'stroke-width':'1.6','stroke-opacity':'.55',class:'edge'});
+    gEdges.appendChild(line);
+    edges.push({ends:[ak,uk],dom:[line]});
+  });
+}
+// ---- draw include/extend edges ----
+function relEdge(from,to,label){
+  const f=UC[from],t=UC[to];
+  const [fx,fy]=ellipsePt(f.x,f.y,RX,RY,t.x,t.y);
+  const [tx,ty]=ellipsePt(t.x,t.y,RX,RY,f.x,f.y);
+  const line=el('line',{x1:fx,y1:fy,x2:tx,y2:ty,stroke:'#6B7280','stroke-width':'1.6','stroke-dasharray':'6 5','marker-end':'url(#arrow)',class:'edge'});
+  gEdges.appendChild(line);
+  const lab=el('text',{x:(fx+tx)/2,y:(fy+ty)/2-4,'text-anchor':'middle','font-size':'10.5',fill:'#6B7280','font-style':'italic',class:'elabel'});
+  lab.textContent=label;
+  // bg for readability
+  const bg=el('rect',{}); gLabels.appendChild(bg); gLabels.appendChild(lab);
+  const pad=3;
+  requestAnimationFrame(()=>{const bb=lab.getBBox();bg.setAttribute('x',bb.x-pad);bg.setAttribute('y',bb.y-1);bg.setAttribute('width',bb.width+pad*2);bg.setAttribute('height',bb.height+2);bg.setAttribute('fill','#FBFCFF');bg.setAttribute('class','elabel');bg.setAttribute('data-pair',from+'_'+to);});
+  edges.push({ends:[from,to],dom:[line,lab,bg]});
+}
+INCLUDE.forEach(p=>relEdge(p[0],p[1],'«include»'));
+EXTEND.forEach(p=>relEdge(p[0],p[1],'«extend»'));
+
+// ---- draw use case ovals ----
+const nodeDom={};
+for(const uk in UC){
+  const u=UC[uk], col=AGENT[u.ag];
+  const g=el('g',{class:'node uc','data-key':uk});
+  g.appendChild(el('ellipse',{cx:u.x,cy:u.y,rx:RX,ry:RY,fill:'#fff',stroke:col,'stroke-width':'2.2'}));
+  const lines=wrap2(u.t);
+  const baseY = u.y - (lines.length>1?6:2);
+  lines.forEach((ln,i)=>{
+    const t=el('text',{x:u.x,y:baseY+i*15,'text-anchor':'middle','font-size':'12.5','font-weight':'600',fill:'#1A1A2E'});
+    t.textContent=ln; g.appendChild(t);
+  });
+  const ag=el('text',{x:u.x,y:u.y+(lines.length>1?24:16),'text-anchor':'middle','font-size':'10',fill:col,'font-weight':'600'});
+  ag.textContent=u.ag==='Core'?'Orchestrator':u.ag;
+  g.appendChild(ag);
+  gNodes.appendChild(g);
+  nodeDom[uk]=g;
+}
+
+// ---- draw actors (stick figures) ----
+function actorFig(key){
+  const a=ACT[key], col=ACTORCOL[key];
+  const g=el('g',{class:'node actor','data-key':key});
+  const x=a.x, y=a.y-46; // head top region
+  g.appendChild(el('circle',{cx:x,cy:y,r:13,fill:'#fff',stroke:col,'stroke-width':'2.4'}));
+  g.appendChild(el('line',{x1:x,y1:y+13,x2:x,y2:y+44,stroke:col,'stroke-width':'2.4'}));        // body
+  g.appendChild(el('line',{x1:x-20,y1:y+26,x2:x+20,y2:y+26,stroke:col,'stroke-width':'2.4'}));    // arms
+  g.appendChild(el('line',{x1:x,y1:y+44,x2:x-16,y2:y+68,stroke:col,'stroke-width':'2.4'}));        // leg
+  g.appendChild(el('line',{x1:x,y1:y+44,x2:x+16,y2:y+68,stroke:col,'stroke-width':'2.4'}));        // leg
+  const t1=el('text',{x:x,y:y+90,'text-anchor':'middle','font-size':'14','font-weight':'700',fill:col});t1.textContent=a.t;
+  const t2=el('text',{x:x,y:y+106,'text-anchor':'middle','font-size':'11',fill:'#6B7280'});t2.textContent=a.sub;
+  g.appendChild(t1);g.appendChild(t2);
+  gNodes.appendChild(g);
+  nodeDom[key]=g;
+}
+['customer','cbs','officer','compliance'].forEach(actorFig);
+
+// ---- interactivity ----
+function setFocus(key){
+  const connected=new Set([key]);
+  edges.forEach(e=>{ if(e.ends.includes(key)) e.ends.forEach(x=>connected.add(x)); });
+  document.body.classList.add('focusing');
+  edges.forEach(e=>{ const hot=e.ends.includes(key); e.dom.forEach(d=>d.classList.toggle('hot',hot)); });
+  for(const k in nodeDom){ nodeDom[k].classList.toggle('hot', connected.has(k)); }
+}
+function clearFocus(){
+  document.body.classList.remove('focusing');
+  edges.forEach(e=>e.dom.forEach(d=>d.classList.remove('hot')));
+  for(const k in nodeDom) nodeDom[k].classList.remove('hot');
+}
+document.querySelectorAll('.node').forEach(n=>{
+  const k=n.getAttribute('data-key');
+  n.addEventListener('mouseenter',()=>setFocus(k));
+  n.addEventListener('mouseleave',clearFocus);
+  n.addEventListener('click',(ev)=>{ev.stopPropagation();setFocus(k);});
+});
+document.body.addEventListener('click',clearFocus);
+
+// ---- legend ----
+const legend=document.getElementById('legend');
+const order=['Samjho','Khojo','Chalao','Queue Hatao','Suraksha','DMS','Core'];
+const names={Samjho:'Samjho — understand',Khojo:'Khojo — discovery',Chalao:'Chalao — navigation','Queue Hatao':'Queue Hatao — engagement',Suraksha:'Suraksha — protection',DMS:'DMS — adoption metric',Core:'Orchestrator & compliance'};
+order.forEach(a=>{
+  const d=document.createElement('div');d.className='lg';
+  d.innerHTML='<span class="sw" style="border-color:'+AGENT[a]+';background:'+AGENT[a]+'22"></span>'+names[a];
+  legend.appendChild(d);
+});
+</script>
+</body>
+</html>
