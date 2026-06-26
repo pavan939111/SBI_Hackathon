@@ -6,4 +6,4 @@ def test_navigator_steps():
     navigator = YONONavigator()
     steps = navigator.get_steps("KCC_001")
     assert len(steps) > 0
-    assert "Loans" in steps[0]
+    assert "Loans" in steps[1]

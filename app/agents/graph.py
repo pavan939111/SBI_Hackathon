@@ -1,10 +1,11 @@
 """
-LangGraph construction mapping Samjho, Khojo, Chalao, Queue Hatao, and Suraksha nodes.
+LangGraph construction mapping Samjho, Khojo, Jodo, Chalao, Queue Hatao, and Suraksha nodes.
 """
 from langgraph.graph import StateGraph, END
 from app.agents.state import AgentState
 from app.agents.samjho.agent import samjho_node
 from app.agents.khojo.agent import khojo_node
+from app.agents.jodo.agent import jodo_node
 from app.agents.chalao.agent import chalao_node
 from app.agents.queue_hatao.agent import queue_hatao_node
 from app.agents.suraksha.agent import suraksha_node
@@ -15,6 +16,7 @@ def build_graph() -> StateGraph:
     # Add nodes
     workflow.add_node("samjho", samjho_node)
     workflow.add_node("khojo", khojo_node)
+    workflow.add_node("jodo", jodo_node)
     workflow.add_node("chalao", chalao_node)
     workflow.add_node("queue_hatao", queue_hatao_node)
     workflow.add_node("suraksha", suraksha_node)
@@ -34,9 +36,28 @@ def build_graph() -> StateGraph:
         }
     )
     
-    workflow.add_edge("khojo", "chalao")
+    # Conditional routing logic from Khojo:
+    # If no schemes matched and there are missing profile fields, handoff to Jodo.
+    def khojo_router(state: AgentState) -> str:
+        if not state.get("matched_schemes") and state.get("missing_fields"):
+            return "jodo"
+        return "chalao"
+
+    workflow.add_conditional_edges(
+        "khojo",
+        khojo_router,
+        {
+            "jodo": "jodo",
+            "chalao": "chalao"
+        }
+    )
+    
+    # Loop from Jodo back to Khojo to re-evaluate eligibility after data entry
+    workflow.add_edge("jodo", "khojo")
+    
     workflow.add_edge("chalao", "queue_hatao")
     workflow.add_edge("queue_hatao", "suraksha")
     workflow.add_edge("suraksha", END)
     
     return workflow.compile()
+

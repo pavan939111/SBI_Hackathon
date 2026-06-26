@@ -11,13 +11,16 @@ router = APIRouter()
 queue_manager = QueueManager()
 
 @router.post("", response_model=WebhookResponse)
-async def inbound_message(payload: WebhookPayload, db: AsyncSession = Depends(get_db_session)):
+async def inbound_message(request: Request, payload: WebhookPayload, db: AsyncSession = Depends(get_db_session)):
     """Receives and processes incoming messaging API payload."""
     sender = "+919400000000"
     body = "Hello BankSaathi KCC"
     
+    # Extract channel from headers (whatsapp, sms, ivr, yono)
+    channel = request.headers.get("X-Channel", "whatsapp").lower()
+    
     # Try parsing details from WhatsApp Cloud entry layout structure
-    if payload.entry and len(payload.entry) > 0:
+    if channel == "whatsapp" and payload.entry and len(payload.entry) > 0:
         entry = payload.entry[0]
         changes = entry.get("changes", [])
         if changes and len(changes) > 0:
@@ -30,7 +33,8 @@ async def inbound_message(payload: WebhookPayload, db: AsyncSession = Depends(ge
                 
     task_payload = {
         "sender": sender,
-        "body": body
+        "body": body,
+        "channel": channel
     }
     
     success = await queue_manager.enqueue_task(task_payload)
@@ -38,6 +42,7 @@ async def inbound_message(payload: WebhookPayload, db: AsyncSession = Depends(ge
         return {"status": "accepted", "message": "Payload queued"}
     else:
         return {"status": "error", "message": "Failed to buffer task payload"}
+
 
 @router.get("")
 async def verify_hub(request: Request):

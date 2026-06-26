@@ -17,4 +17,7 @@ class AuditLog(Base):
     risk_tier = Column(Integer, nullable=False)
     autonomous = Column(Boolean, default=False)
     outcome = Column(String)
+    sha256_hash = Column(String)
+    signature = Column(String)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
+

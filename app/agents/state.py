@@ -15,3 +15,8 @@ class AgentState(TypedDict):
     form_prefilled: Dict[str, Any]
     requires_officer: bool
     recovery_context: Dict[str, Any]
+    profile_score: int
+    missing_fields: List[str]
+    declarations: Dict[str, Any]
+    otp_verified: bool
+
